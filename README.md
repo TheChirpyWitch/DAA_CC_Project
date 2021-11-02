@@ -3,11 +3,11 @@
 Kosaraju's Algorithm:
 
 Test Cases:
-* SSCs in first graph
-** [1, 2, 0]
-** [3]
-** [4]
-SSCs in second graph
+1. SSCs in first graph
+* [1, 2, 0]
+* [3]
+* [4]
+2. SSCs in second graph
 [0]
 [1]
 [2]

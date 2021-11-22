@@ -155,11 +155,19 @@ int main(int argc, const char * argv[]) {
 
     // Captcha image type 1 - ../CCLData/thresholded_sc_pbm_images/348.pbm
     // Captcha image type 2 - ../CCLData/thresholded_sc_pbm_images/348.pbm
-	Image inputImage = readImage("../CCLData/thresholded_patna_pbm_images/0.pbm");
+	Image inputImage = readImage("../CCLData/thresholded_sc_pbm_images/348.pbm");
+
+    clock_t t;
+    t = clock();
+    
+
 	Matrix matrix = labelImage(inputImage);
 
+    t = clock() - t;
+    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds
+    printf("Time taken: %lf", time_taken);
     /*----------------- THRESHOLDING ----------------*/
-    int threshold = 0;
+    int threshold = 50;
     int n = numberOfLetters(matrix, threshold);
     int arr[n];
     int count = 0;
@@ -198,6 +206,9 @@ int main(int argc, const char * argv[]) {
                     break;
                 }
             }
+            if(flag==0){
+                setPixel(inputImage, i, j, 255, 255, 255, 255);
+            }
             if(matrix.map[i][j] != 255 && flag == 1){
                 m = find_label_color((int)matrix.map[i][j]);
                 if(m != NULL){
@@ -210,7 +221,7 @@ int main(int argc, const char * argv[]) {
 
     // Type 1 output - ../CCLData/colored_images/348.ppm
     // Type 2 output - ../CCLData/colored_images/0.ppm
-    writeImage(inputImage, "../CCLData/colored_images/0.ppm");
+    writeImage(inputImage, "../CCLData/colored_images/348.ppm");
 	/* Delete the input image */
 	deleteImage(inputImage);
 	

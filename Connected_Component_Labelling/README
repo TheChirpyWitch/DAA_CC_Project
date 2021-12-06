@@ -1,0 +1,25 @@
+# Instructions to run Two Pass and One Pass algorithms
+
+## Setup environment
+```
+$ pip install -r requirements.txt
+```
+
+## Run Two Pass
+1. C program
+```
+$ cd Two\ Pass\ Algorithm/C\ Program
+$ gcc -o two_pass two_pass.c netpbm.c
+$ ./two_pass
+```
+
+2. Python program
+```
+$ cd Two\ Pass\ Algorithm/Python
+$ python opencv_two_pass.py
+```
+
+## Run One Pass
+```
+$ python ccl_onepass.py
+```

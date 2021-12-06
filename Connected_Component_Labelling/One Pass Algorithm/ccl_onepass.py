@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import glob
 import time
+import os
 
 # Filtering function
 def dfs(row, col, grid, n_components):
@@ -20,7 +21,6 @@ def onepass_ccl(grid):
     for i in range(n_rows):
         for j in range(n_cols):
             if(grid[i][j] == 255):
-                coordinates = []
                 n_components+=1
                 dfs(i, j, grid, n_components)
     return n_components
@@ -89,6 +89,8 @@ if __name__ == '__main__':
         cv2.imshow("Original", cropped_img)
         cv2.imshow("Binary Thresholded Image", clean_img)
         cv2.imshow("Noise Removed", mask)
+        # cv2.imwrite(os.path.join("../CCLData", "NoiseRemovedImages", image.split("/")[-1]), mask)
+        # cv2.imwrite(os.path.join("../CCLData", "thresholded_patna_images", image.split("/")[-1]), clean_img)
         cv2.namedWindow("Original", cv2.WINDOW_NORMAL)
         cv2.resizeWindow("Original", 334, 100)
         cv2.namedWindow("Binary Thresholded Image", cv2.WINDOW_NORMAL)

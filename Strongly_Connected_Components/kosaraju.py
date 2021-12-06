@@ -1,5 +1,9 @@
 from collections import defaultdict
 import sys
+import matplotlib.pyplot as plt
+import networkx as nx
+from datetime import datetime
+startTime = datetime.now()
 sys.setrecursionlimit(30000)
 
 class Graph:
@@ -9,6 +13,7 @@ class Graph:
         self.graph = defaultdict(list)
         self.visited = {}
         self.max_scc = []
+        #self.condensed_nodes = {}
    
     def addEdge(self, u, v):
         self.graph[u].append(v)
@@ -30,7 +35,6 @@ class Graph:
             if visited[i] == False:
                 self.fill(i, visited, stack)
         stack = stack.append(v)
-      
   
     def getTranspose(self):
         g = Graph(self.V)  
@@ -44,17 +48,28 @@ class Graph:
         for i in self.visited:
             if self.visited[i] == False:
                 self.fill(i, self.visited, stack)
+        ofile = open(output_file, "a")
+        """
+        for key in self.graph:
+            group = " "
+            for val in self.graph[key]:
+                group = group + val + " "
+            ofile.write(key + group + "\n")
+        #print(self.graph)
+        """
         gr = self.getTranspose()
+        print("Transposed graph:")
+        print(dict(gr.graph))
         for i in self.visited:
             self.visited[i] = False
-        ofile = open(output_file, "a")
         while stack:
             i = stack.pop()
             if self.visited[i] == False:
                 scc = []
+                #self.condensed_nodes_roots.append(i)
                 gr.DFS_(i, self.visited, scc)
+                print(scc)
                 ofile.write(str(scc) + "\n")
-                #print(scc)
                 if len(scc) > len(self.max_scc):
                     self.max_scc = scc
 
@@ -70,19 +85,35 @@ def make_graph(file_name, g, split_by):
 
 def edges_associated(g):
     n = 0
-    for e in g.max_scc:
-        for e2 in g.graph[e]:
+    G = nx.DiGraph()
+    elist = []
+    for node in g.max_scc:
+        for e2 in g.graph[node]:
             if e2 in g.max_scc:
+                elist.append([node, e2])
                 n += 1
-    return n
+    #G.add_edges_from(elist)
+    return n, elist
 
 def print_stats(file_name, g, split_by):
     g = make_graph(file_name, g, split_by)
     file = file_name[:-4] + "_SCCs_kosaraju.txt"
     print("SSC Stats in " + file_name[:-4] + " graph ")
+    print(datetime.now() - startTime)
     g.printSCCs(file)
+    print(datetime.now() - startTime)
+    n_e, elist = edges_associated(g)
     print("Number of nodes in largest SCC: " + str(len(g.max_scc)))
-    print("Number of edges in largest SCC: " + str(edges_associated(g)))
+    print("Number of edges in largest SCC: " + str(n_e))
+    write_file_name = file_name[:-4] + "_SCC_edgelist_kosaraju_.csv"
+    write_file = open(write_file_name, "w+")
+    for el in elist:
+        c = str(el[0]) + " " + str(el[1]) + "\n"
+        write_file.write(c)
+    #nx.draw_networkx(max_scc, pos = nx.spring_layout(max_scc))
+    #plt.title("SCC in " + file_name[:-4] + " graph")
+    #plt.show()
+
 
 #g_citation = Graph(27770)
 #print_stats("citation.txt", g_citation, "\t")
@@ -90,6 +121,26 @@ def print_stats(file_name, g, split_by):
 #g_twitter = Graph(81306)
 #print_stats("twitter.txt", g_twitter, " ")
 
+
+g0 = Graph(8)
+g0.addEdge("a", "b")
+g0.addEdge("b", "c")
+g0.addEdge("c", "d")
+g0.addEdge("d", "c")
+g0.addEdge("c", "g")
+g0.addEdge("g", "f")
+g0.addEdge("f", "g")
+g0.addEdge("h", "g")
+g0.addEdge("h", "d")
+g0.addEdge("d", "h")
+g0.addEdge("e", "f")
+g0.addEdge("e", "a")
+g0.addEdge("b", "f")
+g0.addEdge("b", "e")
+print("SSC in zeroth graph ")
+g0.printSCCs("check1.txt")
+
+"""
 g1 = Graph(5)
 g1.addEdge(1, 0)
 g1.addEdge(0, 2)
@@ -150,3 +201,4 @@ g5.addEdge(3, 0)
 g5.addEdge(4, 2)
 print("SSC in fifth graph ")
 g5.printSCCs("check1.txt")
+"""

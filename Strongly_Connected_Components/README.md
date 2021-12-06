@@ -67,3 +67,7 @@ SSC Stats in citation graph
 SSC Stats in twitter graph 
 * Number of nodes in largest SCC: 68413
 * Number of edges in largest SCC: 2322563
+
+Next Steps:
+* Graph Condensation
+* Compare with networkx's strongly_connected_components_recursive(uses Tarjan's) and kosaraju_strongly_connected_components.
